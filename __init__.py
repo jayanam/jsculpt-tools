@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8",
     "blender" : (2, 80, 0),
-    "version" : (1, 0, 0, 1),
+    "version" : (1, 0, 0, 2),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -65,6 +65,7 @@ bpy.types.Scene.remesh_after_extract  = BoolProperty(name="Remesh after extract"
 bpy.types.Scene.remesh_after_union  = BoolProperty(name="Remesh after union", 
                                       description="Remesh the mesh after union operation",
                                       default = True)
+
 
 add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Plane",     "Plane",    "", 1),

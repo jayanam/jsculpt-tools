@@ -96,7 +96,11 @@ class FSC_PT_Remesh_Panel(FSC_PT_Panel, Panel):
         row.prop(context.scene, "remesh_voxel_size", text="Voxel size")
 
         row = layout.row()
-        row.operator('object.fsc_remesh', text="Remesh")
+        col = row.column()
+        col.operator('object.fsc_remesh', text="Remesh")
+
+        col = row.column()
+        col.operator('object.fsc_remesh', text="Join & Remesh").join_b4_remesh = True
 
 
 class FSC_PT_Retopo_Panel(FSC_PT_Panel, Panel):
