@@ -5,8 +5,8 @@ from bpy.types import Panel
 class FSC_PT_Panel(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_label = "Fast Sculpt"
-    bl_category = "Fast Sculpt"
+    bl_label = "JSculpt"
+    bl_category = "JSculpt tools"
     
     def draw(self, context):
         pass
