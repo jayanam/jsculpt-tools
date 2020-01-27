@@ -1,2 +1,2 @@
 # JSculpt tools
-Blender sculpting tools addon (before: Fast Sculpt)
+Blender 2.8 sculpting utilities addon (before: Fast Sculpt)
