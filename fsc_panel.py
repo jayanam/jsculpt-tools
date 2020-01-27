@@ -6,7 +6,7 @@ class FSC_PT_Panel(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_label = "JSculpt"
-    bl_category = "JSculpt tools"
+    bl_category = "JSculpt"
     
     def draw(self, context):
         pass
