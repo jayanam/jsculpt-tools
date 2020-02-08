@@ -15,6 +15,12 @@ class FSC_OT_Remesh_Operator(Operator):
 
     def invoke(self, context, event):
 
+        # Apply all mirror modifiers before join and remesh
+        for sel_object in context.selected_objects:
+            for modifier in sel_object.modifiers:
+                if modifier.type == "MIRROR":
+                    bpy.ops.object.modifier_apply(modifier=modifier.name)
+
         if self.join_b4_remesh:
             bpy.ops.object.join()
 
