@@ -11,23 +11,6 @@ class FSC_PT_Panel(Panel):
     def draw(self, context):
         pass
 
-class FSC_PT_Bool_Objects_Panel(FSC_PT_Panel, Panel):
-    bl_parent_id = "FSC_PT_Panel"
-    bl_label = "Bool objects"
-    
-    def draw(self, context): 
-
-        layout = self.layout
-
-        row = layout.row()
-        row.prop_search(context.scene, "target_object", context.scene, "objects", text="Target")
-
-        row = layout.row()
-        row.operator('object.fsc_bool_union', text='Bool Union')
-
-        row = layout.row()
-        row.operator('object.fsc_bool_diff', text='Bool Difference')
-
 class FSC_PT_Add_Objects_Panel(FSC_PT_Panel, Panel):
     bl_parent_id = "FSC_PT_Panel"
     bl_label = "Add objects"
