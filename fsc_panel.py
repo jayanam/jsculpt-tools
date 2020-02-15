@@ -11,9 +11,11 @@ class FSC_PT_Panel(Panel):
     def draw(self, context):
         pass
 
-class FSC_PT_Add_Objects_Panel(FSC_PT_Panel, Panel):
+class FSC_PT_Add_Objects_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
     bl_label = "Add objects"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
     
     def draw(self, context): 
 
@@ -34,9 +36,11 @@ class FSC_PT_Add_Objects_Panel(FSC_PT_Panel, Panel):
         row = layout.row()
         row.operator('object.fsc_add_object', text="Add object mode")
 
-class FSC_PT_Extract_Mask_Panel(FSC_PT_Panel, Panel):
+class FSC_PT_Extract_Mask_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
     bl_label = "Extract objects"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
     
     def draw(self, context): 
 
@@ -52,9 +56,11 @@ class FSC_PT_Extract_Mask_Panel(FSC_PT_Panel, Panel):
         row.operator('object.fsc_ot_mask_extract', text="Extract Mask")
 
 
-class FSC_PT_Remesh_Panel(FSC_PT_Panel, Panel):
+class FSC_PT_Remesh_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
     bl_label = "Remesh objects"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
     
     def draw(self, context): 
 
@@ -86,9 +92,11 @@ class FSC_PT_Remesh_Panel(FSC_PT_Panel, Panel):
         col.operator('object.fsc_remesh', text="Join & Remesh").join_b4_remesh = True
 
 
-class FSC_PT_Retopo_Panel(FSC_PT_Panel, Panel):
+class FSC_PT_Retopo_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
     bl_label = "Retopo objects"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
     
     def draw(self, context): 
 
