@@ -5,11 +5,25 @@ from bpy.types import Operator
 from . fsc_select_mode_utils import *
 from . fsc_bool_util  import *
 
+class FSC_OT_Mask_Invert_Transform_Operator(Operator):
+    bl_idname = "object.fsc_ot_invert_transform"
+    bl_label = "Invert mask transform"
+    bl_description = "Invert a mask and activate transform tool" 
+    bl_options = {'REGISTER', 'UNDO'} 
+
+    def execute(self, context):
+        to_sculpt()
+        bpy.ops.paint.mask_flood_fill(mode='INVERT')
+        bpy.ops.wm.tool_set_by_id(name="builtin.move")
+        bpy.ops.sculpt.set_pivot_position(mode='UNMASKED')
+        return {'FINISHED'}
+
+
 class FSC_OT_Mask_Extract_Operator(Operator):
     bl_idname = "object.fsc_ot_mask_extract"
     bl_label = "Extract mask"
     bl_description = "Extract a mask as mesh" 
-    bl_options = {'REGISTER'}
+    bl_options = {'REGISTER', 'UNDO'} 
     
     def invoke(self, context, event):
 

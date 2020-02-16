@@ -38,7 +38,7 @@ class FSC_PT_Add_Objects_Panel(Panel):
 
 class FSC_PT_Extract_Mask_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
-    bl_label = "Extract objects"
+    bl_label = "Mask utils"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     
@@ -46,14 +46,19 @@ class FSC_PT_Extract_Mask_Panel(Panel):
 
         layout = self.layout
 
-        row = layout.row()
-        row.prop(context.scene, "extract_thickness", text="Thickness")
 
         row = layout.row()
-        row.prop(context.scene, "extract_offset", text="Offset")
+        col = row.column()
+        col.prop(context.scene, "extract_thickness", text="Thickness")
+
+        col = row.column()
+        col.prop(context.scene, "extract_offset", text="Offset")
 
         row = layout.row()
         row.operator('object.fsc_ot_mask_extract', text="Extract Mask")
+
+        row = layout.row()
+        row.operator('object.fsc_ot_invert_transform', text="Invert Transform")
 
 
 class FSC_PT_Remesh_Panel(Panel):
