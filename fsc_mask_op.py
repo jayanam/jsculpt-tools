@@ -14,8 +14,8 @@ class FSC_OT_Mask_Invert_Transform_Operator(Operator):
     def execute(self, context):
         to_sculpt()
         bpy.ops.paint.mask_flood_fill(mode='INVERT')
-        bpy.ops.wm.tool_set_by_id(name="builtin.move")
-        bpy.ops.sculpt.set_pivot_position(mode='UNMASKED')
+        bpy.ops.wm.tool_set_by_id(name="builtin.transform")
+        bpy.ops.sculpt.set_pivot_position('INVOKE_DEFAULT', mode='UNMASKED')
         return {'FINISHED'}
 
 
