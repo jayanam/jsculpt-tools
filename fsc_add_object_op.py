@@ -97,6 +97,11 @@ class FSC_OT_Add_Oject_Operator(Operator):
         
         return 2
 
+    def get_raycast_param(self, view_layer):        
+        if bpy.app.version >= (2, 91, 0):
+            return view_layer.depsgraph
+        else:
+            return view_layer 
 
     def add_object(self, context, mouse_pos):
         
@@ -111,8 +116,10 @@ class FSC_OT_Add_Oject_Operator(Operator):
         loc         = view3d_utils.region_2d_to_location_3d(region, region3D, mouse_pos, view_vector)
         rot         = (0,0,0)  
 
+        raycast_param = self.get_raycast_param(context.view_layer)
+
         # Get intersection and create objects at this location if possible
-        hit, loc_hit, norm, face, *_ = scene.ray_cast(context.view_layer, origin, view_vector)
+        hit, loc_hit, norm, face, *_ = scene.ray_cast(raycast_param, origin, view_vector)
         if hit:
             loc = loc_hit
             z = Vector((0,0,1))
