@@ -41,8 +41,9 @@ class FSC_OT_Retopo_Operator(Operator):
       plane = bpy.context.view_layer.objects.active
       mod_sw = plane.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
       mod_sw.target = context.scene.retopo_object
-      #context.object.show_in_front = True
-      
+      mod_sw.wrap_mode = 'ABOVE_SURFACE'
+      mod_sw.offset = 0.03
+
       to_edit()
 
       bpy.ops.mesh.normals_make_consistent(inside=False)
