@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8",
     "blender" : (2, 80, 0),
-    "version" : (1, 0, 3, 0),
+    "version" : (1, 0, 4, 0),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -46,10 +46,6 @@ bpy.types.Scene.align_to_face  = BoolProperty(name="Align to face",
                                       description="Align to face orientation",
                                       default = True)
 
-bpy.types.Scene.remesh_smooth_normals  = BoolProperty(name="Smooth normals", 
-                                      description="Smooth normals after remesh",
-                                      default = False)
-
 bpy.types.Scene.remesh_fix_poles  = BoolProperty(name="Fix poles", 
                                       description="Fix the poles",
                                       default = False)
@@ -61,11 +57,6 @@ bpy.types.Scene.remesh_preserve_volume = BoolProperty(name="Preserve volume",
 bpy.types.Scene.remesh_after_extract  = BoolProperty(name="Remesh after extract", 
                                       description="Remesh the mesh after mask extraction",
                                       default = True)
-
-bpy.types.Scene.remesh_after_union  = BoolProperty(name="Remesh after union", 
-                                      description="Remesh the mesh after union operation",
-                                      default = True)
-
 
 add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Plane",     "Plane",    "", 1),
