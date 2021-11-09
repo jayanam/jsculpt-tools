@@ -101,4 +101,10 @@ class FSC_PT_Retopo_Panel(Panel):
         row.prop(context.scene, "retopo_object", text="Target")
 
         row = layout.row()
+        row.prop(context.scene, "add_retopo_mirror", text="Mirror")
+
+        row = layout.row()
+        row.prop(context.scene, "add_retopo_subsurf", text="Subdivision surface")
+
+        row = layout.row()
         row.operator('object.fsc_retopo', text="Add retopo mesh")

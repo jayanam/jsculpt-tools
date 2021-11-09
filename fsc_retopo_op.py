@@ -1,5 +1,6 @@
 import bpy
 from bpy.types import Operator
+from . fsc_common_utils import get_axis_no
 
 from . fsc_bool_util import *
 from . fsc_select_mode_utils import *
@@ -44,6 +45,14 @@ class FSC_OT_Retopo_Operator(Operator):
       mod_sw.wrap_mode = 'ABOVE_SURFACE'
       mod_sw.offset = 0.03
 
+      if context.scene.add_retopo_subsurf:
+        mod_subsurf = plane.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
+
+      if context.scene.add_retopo_mirror:
+        mod_mirror = plane.modifiers.new(type="MIRROR", name="FSC_MIRROR")
+        mod_mirror.use_axis[0] = False
+        mod_mirror.use_axis[get_axis_no(context.scene.add_retopo_mirror)] = True
+        
       to_edit()
 
       bpy.ops.mesh.normals_make_consistent(inside=False)

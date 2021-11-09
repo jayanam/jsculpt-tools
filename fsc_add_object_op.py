@@ -9,6 +9,8 @@ from bpy_extras import view3d_utils
 
 from . fsc_select_mode_utils import *
 
+from . fsc_common_utils import get_axis_no
+
 class FSC_OT_Add_Oject_Operator(Operator):
     bl_idname = "object.fsc_add_object"
     bl_label = "Add object"
@@ -88,14 +90,6 @@ class FSC_OT_Add_Oject_Operator(Operator):
             self.add_object(context, mouse_pos)
 
         return {'PASS_THROUGH'}
-
-    def get_axis_no(self, str_axis):
-        if str_axis == "X":
-            return 0
-        elif str_axis == "Y":
-            return 1
-        
-        return 2
 
     def get_raycast_param(self, view_layer):        
         if bpy.app.version >= (2, 91, 0):
@@ -181,7 +175,7 @@ class FSC_OT_Add_Oject_Operator(Operator):
     
             mirror_mod = active_obj.modifiers.new(type="MIRROR", name="FSC_MIRROR")
             mirror_mod.use_axis[0] = False
-            mirror_mod.use_axis[self.get_axis_no(mirror)] = True
+            mirror_mod.use_axis[get_axis_no(mirror)] = True
 
             # Set the pivot point back to the old position of the object
             bpy.context.scene.cursor.location = old_loc

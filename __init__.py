@@ -1,9 +1,9 @@
 bl_info = {
     "name" : "JSculpt Tools",
     "author" : "jayanam",
-    "description" : "Sculpting tools for Blender 2.8",
+    "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 0, 4, 0),
+    "version" : (1, 0, 5, 0),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -22,6 +22,12 @@ from . fsc_add_object_op import *
 # Global properties
 bpy.types.WindowManager.in_add_mode = BoolProperty(name="Add Mode",
                                         default = False)
+
+add_object_mirror = [("None",    "None",  "", 0),
+                     ("X",       "X",     "", 1),
+                     ("Y",       "Y",     "", 2),
+                     ("Z",       "Z",     "", 3)    
+                  ]
 
 # Scene properties
 bpy.types.Scene.target_object = PointerProperty(type=bpy.types.Object)
@@ -58,6 +64,14 @@ bpy.types.Scene.remesh_after_extract  = BoolProperty(name="Remesh after extract"
                                       description="Remesh the mesh after mask extraction",
                                       default = True)
 
+bpy.types.Scene.add_retopo_mirror = bpy.props.EnumProperty(items=add_object_mirror, 
+                                                        name="Retopo Mirror",
+                                                        default="None") 
+
+bpy.types.Scene.add_retopo_subsurf  = BoolProperty(name="Subdivision surface", 
+                                      description="Add subdivision surface modifier for retopo mesh",
+                                      default = False) 
+
 add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Plane",     "Plane",    "", 1),
                      ("Cube",      "Cube",     "", 2),
@@ -67,13 +81,6 @@ add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Icosphere", "Icosphere","", 6),
                      ("Scene",     "Scene",    "", 7),      
                   ]
-
-add_object_mirror = [("None",    "None",  "", 0),
-                     ("X",       "X",     "", 1),
-                     ("Y",       "Y",     "", 2),
-                     ("Z",       "Z",     "", 3)    
-                  ]
-
 bpy.types.Scene.add_object_type = bpy.props.EnumProperty(items=add_object_types, 
                                                         name="Add Object",
                                                         default="Sphere")
