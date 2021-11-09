@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 0, 5, 0),
+    "version" : (1, 0, 5, 1),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -27,6 +27,10 @@ add_object_mirror = [("None",    "None",  "", 0),
                      ("X",       "X",     "", 1),
                      ("Y",       "Y",     "", 2),
                      ("Z",       "Z",     "", 3)    
+                  ]
+
+retopo_location = [("Origin", "Origin",  "", 0),
+                   ("Cursor", "Cursor",     "", 1)
                   ]
 
 # Scene properties
@@ -67,6 +71,11 @@ bpy.types.Scene.remesh_after_extract  = BoolProperty(name="Remesh after extract"
 bpy.types.Scene.add_retopo_mirror = bpy.props.EnumProperty(items=add_object_mirror, 
                                                         name="Retopo Mirror",
                                                         default="None") 
+
+bpy.types.Scene.retopo_location = bpy.props.EnumProperty(items=retopo_location, 
+                                                        name="Retopo Location",
+                                                        description="Initial location for retopo plane",
+                                                        default="Origin") 
 
 bpy.types.Scene.add_retopo_subsurf  = BoolProperty(name="Subdivision surface", 
                                       description="Add subdivision surface modifier for retopo mesh",

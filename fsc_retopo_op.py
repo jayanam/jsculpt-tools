@@ -36,8 +36,11 @@ class FSC_OT_Retopo_Operator(Operator):
       context.scene.tool_settings.use_snap_project = True
       context.scene.tool_settings.use_snap = True
 
-      # TODO: Add it to location of retopo object?
-      bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False, location=(0, 0, 0))
+      loc_plane = (0,0,0)
+      if context.scene.retopo_location == "Cursor":
+          loc_plane = bpy.context.scene.cursor.location
+
+      bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False, location=loc_plane)
 
       plane = bpy.context.view_layer.objects.active
       mod_sw = plane.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
@@ -48,7 +51,7 @@ class FSC_OT_Retopo_Operator(Operator):
       if context.scene.add_retopo_subsurf:
         mod_subsurf = plane.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
 
-      if context.scene.add_retopo_mirror:
+      if context.scene.add_retopo_mirror != "None":
         mod_mirror = plane.modifiers.new(type="MIRROR", name="FSC_MIRROR")
         mod_mirror.use_axis[0] = False
         mod_mirror.use_axis[get_axis_no(context.scene.add_retopo_mirror)] = True
