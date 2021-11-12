@@ -36,13 +36,15 @@ class FSC_OT_Retopo_Operator(Operator):
       context.scene.tool_settings.use_snap_project = True
       context.scene.tool_settings.use_snap = True
 
+      is_cursor_loc = context.scene.retopo_location == "Cursor"
       loc_plane = (0,0,0)
-      if context.scene.retopo_location == "Cursor":
+      if is_cursor_loc:
           loc_plane = bpy.context.scene.cursor.location
 
       bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False, location=loc_plane)
 
       plane = bpy.context.view_layer.objects.active
+      
       mod_sw = plane.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
       mod_sw.target = context.scene.retopo_object
       mod_sw.wrap_mode = 'ABOVE_SURFACE'
@@ -52,10 +54,19 @@ class FSC_OT_Retopo_Operator(Operator):
         mod_subsurf = plane.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
 
       if context.scene.add_retopo_mirror != "None":
+
+        # Reset location to zero for mirror and location type cursor
+        if is_cursor_loc:
+          bpy.context.scene.cursor.location = (0, 0, 0)
+          bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+          bpy.context.scene.cursor.location = loc_plane
+
         mod_mirror = plane.modifiers.new(type="MIRROR", name="FSC_MIRROR")
         mod_mirror.use_axis[0] = False
         mod_mirror.use_axis[get_axis_no(context.scene.add_retopo_mirror)] = True
-        
+        mod_mirror.use_clip = True
+        mod_mirror.merge_threshold = 0.01
+
       to_edit()
 
       bpy.ops.mesh.normals_make_consistent(inside=False)
