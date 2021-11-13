@@ -104,6 +104,9 @@ class FSC_PT_Retopo_Panel(Panel):
         row.prop(context.scene, "add_retopo_mirror", text="Mirror")
 
         row = layout.row()
+        row.prop(context.scene, "retopo_mesh", text="Mesh")
+
+        row = layout.row()
         row.prop(context.scene, "retopo_location", text="Location")
 
         row = layout.row()

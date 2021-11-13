@@ -1,5 +1,6 @@
 import bpy
 from bpy.types import Operator
+from bpy_extras import object_utils
 from . fsc_common_utils import get_axis_no
 
 from . fsc_bool_util import *
@@ -41,17 +42,23 @@ class FSC_OT_Retopo_Operator(Operator):
       if is_cursor_loc:
           loc_plane = bpy.context.scene.cursor.location
 
-      bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False, location=loc_plane)
-
-      plane = bpy.context.view_layer.objects.active
+      if context.scene.retopo_mesh == "Plane":
+        bpy.ops.mesh.primitive_plane_add(size=1, enter_editmode=False, location=loc_plane)
+      else:
+        mesh = bpy.data.meshes.new("")
+        mesh.vertices.add(1)
+        object_utils.object_data_add(context, mesh, operator=None)
       
-      mod_sw = plane.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
+      retopo_object = bpy.context.view_layer.objects.active
+      retopo_object.name = "retopo mesh"
+      
+      mod_sw = retopo_object.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
       mod_sw.target = context.scene.retopo_object
       mod_sw.wrap_mode = 'ABOVE_SURFACE'
       mod_sw.offset = 0.03
 
       if context.scene.add_retopo_subsurf:
-        mod_subsurf = plane.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
+        mod_subsurf = retopo_object.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
 
       if context.scene.add_retopo_mirror != "None":
 
@@ -61,7 +68,7 @@ class FSC_OT_Retopo_Operator(Operator):
           bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
           bpy.context.scene.cursor.location = loc_plane
 
-        mod_mirror = plane.modifiers.new(type="MIRROR", name="FSC_MIRROR")
+        mod_mirror = retopo_object.modifiers.new(type="MIRROR", name="FSC_MIRROR")
         mod_mirror.use_axis[0] = False
         mod_mirror.use_axis[get_axis_no(context.scene.add_retopo_mirror)] = True
         mod_mirror.use_clip = True
