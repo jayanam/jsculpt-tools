@@ -13,7 +13,7 @@ class FSC_PT_Panel(Panel):
 
 class FSC_PT_Add_Objects_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
-    bl_label = "Add objects"
+    bl_label = "Objects"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     
@@ -32,9 +32,12 @@ class FSC_PT_Add_Objects_Panel(Panel):
         layout = self.layout
         row = layout.row()
         row.prop(context.scene, "add_object_mirror", text="Mirror")
-
+ 
         row = layout.row()
         row.operator('object.fsc_add_object', text="Add object mode")
+
+        row = layout.row()
+        row.operator('object.fsc_select_object', text="Select object mode")
 
 class FSC_PT_Extract_Mask_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
@@ -63,7 +66,7 @@ class FSC_PT_Extract_Mask_Panel(Panel):
 
 class FSC_PT_Remesh_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
-    bl_label = "Remesh objects"
+    bl_label = "Remeshing"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     
@@ -90,7 +93,7 @@ class FSC_PT_Remesh_Panel(Panel):
 
 class FSC_PT_Retopo_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
-    bl_label = "Retopo objects"
+    bl_label = "Retopo"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     

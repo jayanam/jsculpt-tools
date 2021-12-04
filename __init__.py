@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 0, 6, 0),
+    "version" : (1, 1, 0, 1),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -18,9 +18,10 @@ from . fsc_mask_op import *
 from . fsc_remesh_op import *
 from . fsc_retopo_op import *
 from . fsc_add_object_op import *
+from . fsc_select_op import *
 
 # Global properties
-bpy.types.WindowManager.in_add_mode = BoolProperty(name="Add Mode",
+bpy.types.WindowManager.in_modal_mode = BoolProperty(name="Modal Mode",
                                         default = False)
 
 add_object_mirror = [("None",    "None",  "", 0),
@@ -114,7 +115,7 @@ addon_keymaps = []
 classes = ( FSC_PT_Panel, FSC_PT_Add_Objects_Panel, FSC_PT_Extract_Mask_Panel, 
             FSC_PT_Remesh_Panel, FSC_PT_Retopo_Panel, FSC_OT_BoolOperator_Union, 
             FSC_OT_BoolOperator_Difference, FSC_OT_Mask_Extract_Operator, FSC_OT_Mask_Invert_Transform_Operator,
-            FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Retopo_Operator )
+            FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Retopo_Operator, FSC_OT_Select_Operator)
 
 def register():
     for c in classes:
@@ -127,10 +128,13 @@ def register():
     kmi = km.keymap_items.new("object.fsc_add_object", 'A', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
 
+    kmi = km.keymap_items.new("object.fsc_select_object", 'D', 'PRESS', shift=True, ctrl=False)
+    addon_keymaps.append((km, kmi))
+
 def unregister():
     for c in classes:
         bpy.utils.unregister_class(c)
-
+ 
     # remove keymap entry
     for km, kmi in addon_keymaps:
         km.keymap_items.remove(kmi)

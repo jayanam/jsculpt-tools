@@ -22,7 +22,7 @@ class FSC_OT_Add_Oject_Operator(Operator):
 
     def invoke(self, context, event):
         args = (self, context)
-        context.window_manager.in_add_mode = True
+        context.window_manager.in_modal_mode = True
         self.register_handlers(args, context)
         context.window_manager.modal_handler_add(self)
         return {'RUNNING_MODAL'}
@@ -33,7 +33,7 @@ class FSC_OT_Add_Oject_Operator(Operator):
         self.draw_event = context.window_manager.event_timer_add(0.1, window=context.window)
 
     def unregister_handlers(self, context):
-        context.window_manager.in_add_mode = False
+        context.window_manager.in_modal_mode = False
         context.window_manager.event_timer_remove(self.draw_event)
         bpy.types.SpaceView3D.draw_handler_remove(self.draw_handle_2d, "WINDOW")
         
@@ -66,13 +66,13 @@ class FSC_OT_Add_Oject_Operator(Operator):
         if context.object is None:
             return False
 
-        if context.window_manager.in_add_mode:
+        if context.window_manager.in_modal_mode:
             return False
 
         return True
 
     def finish(self):
-        context.window_manager.in_add_mode = False
+        bpy.context.window_manager.in_modal_mode = False
         self.unregister_handlers(bpy.context)
         return {"FINISHED"}
 
@@ -81,7 +81,7 @@ class FSC_OT_Add_Oject_Operator(Operator):
             context.area.tag_redraw()
 
         if event.type == "ESC" and event.value == "PRESS":
-            context.window_manager.in_add_mode = False
+            context.window_manager.in_modal_mode = False
             self.unregister_handlers(context)
             return {'FINISHED'}
 
