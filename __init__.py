@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 1, 0, 1),
+    "version" : (1, 1, 1, 1),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -19,6 +19,7 @@ from . fsc_remesh_op import *
 from . fsc_retopo_op import *
 from . fsc_add_object_op import *
 from . fsc_select_op import *
+from . fsc_preferences import FSC_AddonPreferences
 
 # Global properties
 bpy.types.WindowManager.in_modal_mode = BoolProperty(name="Modal Mode",
@@ -115,7 +116,8 @@ addon_keymaps = []
 classes = ( FSC_PT_Panel, FSC_PT_Add_Objects_Panel, FSC_PT_Extract_Mask_Panel, 
             FSC_PT_Remesh_Panel, FSC_PT_Retopo_Panel, FSC_OT_BoolOperator_Union, 
             FSC_OT_BoolOperator_Difference, FSC_OT_Mask_Extract_Operator, FSC_OT_Mask_Invert_Transform_Operator,
-            FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Retopo_Operator, FSC_OT_Select_Operator)
+            FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Retopo_Operator, FSC_OT_Select_Operator,
+            FSC_AddonPreferences)
 
 def register():
     for c in classes:

@@ -36,9 +36,6 @@ class FSC_PT_Add_Objects_Panel(Panel):
         row = layout.row()
         row.operator('object.fsc_add_object', text="Add object mode")
 
-        row = layout.row()
-        row.operator('object.fsc_select_object', text="Select object mode")
-
 class FSC_PT_Extract_Mask_Panel(Panel):
     bl_parent_id = "FSC_PT_Panel"
     bl_label = "Mask utils"
