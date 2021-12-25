@@ -7,9 +7,9 @@ from mathutils import Vector
 
 from bpy_extras import view3d_utils
 
-from . fsc_select_mode_utils import *
+from . utils.fsc_select_mode_utils import *
 
-from . fsc_common_utils import get_axis_no
+from . utils.fsc_common_utils import get_axis_no
 
 class FSC_OT_Add_Oject_Operator(Operator):
     bl_idname = "object.fsc_add_object"

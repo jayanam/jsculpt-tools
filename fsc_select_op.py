@@ -2,7 +2,7 @@ import bpy
 import blf
 from bpy.types import Operator
 
-from . fsc_select_mode_utils import *
+from . utils.fsc_select_mode_utils import *
 
 from bpy_extras.view3d_utils import (
     region_2d_to_origin_3d,

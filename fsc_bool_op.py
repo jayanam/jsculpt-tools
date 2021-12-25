@@ -1,7 +1,7 @@
 import bpy
 from bpy.types import Operator
 
-from . fsc_bool_util import *
+from .utils.fsc_bool_util import *
 
 class FSC_OT_BoolOperator_Union(Operator):
     bl_idname = "object.fsc_bool_union"

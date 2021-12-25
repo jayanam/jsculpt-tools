@@ -2,8 +2,8 @@ import bpy
 
 from bpy.types import Operator
 
-from . fsc_select_mode_utils import *
-from . fsc_bool_util  import *
+from . utils.fsc_select_mode_utils import *
+from .utils.fsc_bool_util  import *
 
 class FSC_OT_Mask_Invert_Transform_Operator(Operator):
     bl_idname = "object.fsc_ot_invert_transform"

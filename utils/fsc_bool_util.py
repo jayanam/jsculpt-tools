@@ -3,7 +3,7 @@ from bpy.props import *
 
 import bmesh
 
-from . fsc_select_mode_utils import *
+from .fsc_select_mode_utils import *
 
 def check_cutter_selected(context):
     result = len(context.selected_objects) > 0

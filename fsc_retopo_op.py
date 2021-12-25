@@ -1,10 +1,11 @@
 import bpy
 from bpy.types import Operator
 from bpy_extras import object_utils
-from . fsc_common_utils import get_axis_no
 
-from . fsc_bool_util import *
-from . fsc_select_mode_utils import *
+from . utils.fsc_retopo_utils import add_mirror, add_shrinkwrap, set_retopo_settings
+
+from . utils.fsc_bool_util import *
+from . utils.fsc_select_mode_utils import *
 
 class FSC_OT_Retopo_Operator(Operator):
     bl_idname = "object.fsc_retopo"
@@ -26,16 +27,7 @@ class FSC_OT_Retopo_Operator(Operator):
 
       make_active(context.scene.retopo_object)
 
-      my_areas = context.workspace.screens[0].areas
-
-      for area in my_areas:
-          for space in area.spaces:
-              if space.type == 'VIEW_3D':
-                  space.shading.show_backface_culling = True
-
-      context.scene.tool_settings.snap_elements = {'FACE'}
-      context.scene.tool_settings.use_snap_project = True
-      context.scene.tool_settings.use_snap = True
+      set_retopo_settings(context)
 
       is_cursor_loc = context.scene.retopo_location == "Cursor"
       loc_plane = (0,0,0)
@@ -52,10 +44,7 @@ class FSC_OT_Retopo_Operator(Operator):
       retopo_object = bpy.context.view_layer.objects.active
       retopo_object.name = "retopo mesh"
       
-      mod_sw = retopo_object.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
-      mod_sw.target = context.scene.retopo_object
-      mod_sw.wrap_mode = 'ABOVE_SURFACE'
-      mod_sw.offset = 0.03
+      add_shrinkwrap(retopo_object, context)
 
       if context.scene.add_retopo_subsurf:
         mod_subsurf = retopo_object.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
@@ -68,14 +57,10 @@ class FSC_OT_Retopo_Operator(Operator):
           bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
           bpy.context.scene.cursor.location = loc_plane
 
-        mod_mirror = retopo_object.modifiers.new(type="MIRROR", name="FSC_MIRROR")
-        mod_mirror.use_axis[0] = False
-        mod_mirror.use_axis[get_axis_no(context.scene.add_retopo_mirror)] = True
-        mod_mirror.use_clip = True
-        mod_mirror.merge_threshold = 0.01
+        add_mirror(retopo_object, context)
 
       to_edit()
 
-      bpy.ops.mesh.normals_make_consistent(inside=False)
+      bpy.ops.mesh.normals_make_consistent()
 
       return {'FINISHED'}

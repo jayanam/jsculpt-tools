@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 1, 1, 1),
+    "version" : (1, 2, 0, 0),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -20,6 +20,7 @@ from . fsc_retopo_op import *
 from . fsc_add_object_op import *
 from . fsc_select_op import *
 from . fsc_preferences import FSC_AddonPreferences
+from . fsc_draw_mode_op import *
 
 # Global properties
 bpy.types.WindowManager.in_modal_mode = BoolProperty(name="Modal Mode",
@@ -101,6 +102,10 @@ add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Icosphere", "Icosphere","", 6),
                      ("Scene",     "Scene",    "", 7),      
                   ]
+
+# Scene properties
+bpy.types.WindowManager.in_draw_mode = BoolProperty(name="Draw Mode", default = False)
+
 bpy.types.Scene.add_object_type = bpy.props.EnumProperty(items=add_object_types, 
                                                         name="Add Object",
                                                         default="Sphere")
@@ -117,7 +122,7 @@ classes = ( FSC_PT_Panel, FSC_PT_Add_Objects_Panel, FSC_PT_Extract_Mask_Panel,
             FSC_PT_Remesh_Panel, FSC_PT_Retopo_Panel, FSC_OT_BoolOperator_Union, 
             FSC_OT_BoolOperator_Difference, FSC_OT_Mask_Extract_Operator, FSC_OT_Mask_Invert_Transform_Operator,
             FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Retopo_Operator, FSC_OT_Select_Operator,
-            FSC_AddonPreferences)
+            FSC_AddonPreferences, FSC_OT_Draw_Mode_Operator)
 
 def register():
     for c in classes:
@@ -130,8 +135,9 @@ def register():
     kmi = km.keymap_items.new("object.fsc_add_object", 'A', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
 
-    kmi = km.keymap_items.new("object.fsc_select_object", 'D', 'PRESS', shift=True, ctrl=False)
-    addon_keymaps.append((km, kmi))
+    if bpy.app.version >= (3, 0, 0):
+        kmi = km.keymap_items.new("object.fsc_select_object", 'D', 'PRESS', shift=True, ctrl=False)
+        addon_keymaps.append((km, kmi))
 
 def unregister():
     for c in classes:

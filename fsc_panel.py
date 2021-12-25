@@ -46,7 +46,6 @@ class FSC_PT_Extract_Mask_Panel(Panel):
 
         layout = self.layout
 
-
         row = layout.row()
         col = row.column()
         col.prop(context.scene, "extract_thickness", text="Thickness")
@@ -104,13 +103,7 @@ class FSC_PT_Retopo_Panel(Panel):
         row.prop(context.scene, "add_retopo_mirror", text="Mirror")
 
         row = layout.row()
-        row.prop(context.scene, "retopo_mesh", text="Mesh")
-
-        row = layout.row()
-        row.prop(context.scene, "retopo_location", text="Location")
-
-        row = layout.row()
         row.prop(context.scene, "add_retopo_subsurf", text="Subdivision surface")
 
         row = layout.row()
-        row.operator('object.fsc_retopo', text="Add retopo mesh")
+        row.operator('object.fsc_draw_retopo', text="Draw Retopo Mesh")

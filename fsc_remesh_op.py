@@ -3,7 +3,8 @@ from bpy.types import Operator
 
 from bpy.props import BoolProperty
 
-from . fsc_bool_util import *
+from . utils.fsc_bool_util import *
+from . utils.fsc_retopo_utils import *
 
 class FSC_OT_Remesh_Operator(Operator):
     bl_idname = "object.fsc_remesh"

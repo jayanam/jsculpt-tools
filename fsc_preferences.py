@@ -36,4 +36,5 @@ class FSC_AddonPreferences(AddonPreferences):
 
             self.add_key_item_row(km_items['object.fsc_add_object'])
 
-            self.add_key_item_row(km_items['object.fsc_select_object'])
+            if bpy.app.version >= (3, 0, 0):
+                self.add_key_item_row(km_items['object.fsc_select_object'])
