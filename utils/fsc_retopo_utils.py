@@ -15,6 +15,13 @@ def get_modifier(object, type):
       return mod
   return None
 
+def add_subsurf(retopo_object, context):
+  mod_subsurf = get_modifier(retopo_object, "SUBSURF")
+  if not mod_subsurf:
+    mod_subsurf = retopo_object.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
+
+  return mod_subsurf
+
 def add_shrinkwrap(retopo_object, context):
   mod_sw = get_modifier(retopo_object, "SHRINKWRAP")
   if not mod_sw:
