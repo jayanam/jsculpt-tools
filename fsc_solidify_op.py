@@ -1,7 +1,7 @@
 import bpy
 from bpy.types import Operator
 
-from .utils.fsc_retopo_utils import add_solidify
+from .utils.fsc_retopo_utils import add_solidify, get_modifier
 
 from .utils.fsc_unit_utils import *
 
@@ -80,12 +80,17 @@ class FSC_OT_Solidify_Operator(BL_UI_OT_draw_operator):
         self.finish()
 
     def on_btn_apply_down(self, widget):
-        mod_solid = self.get_solidify_modifier()
+      active_obj = bpy.context.view_layer.objects.active
+      mod_solid = get_modifier(active_obj, "SOLIDIFY")
+      mod_shrinkwrap = get_modifier(active_obj, "SHRINKWRAP")
 
-        if(mod_solid):
-            bpy.ops.object.modifier_apply(modifier=mod_solid.name)
+      if mod_shrinkwrap:
+        bpy.ops.object.modifier_apply(modifier=mod_shrinkwrap.name) 
 
-        self.finish()
+      if mod_solid:
+        bpy.ops.object.modifier_apply(modifier=mod_solid.name)
+
+      self.finish()
 
     def on_input_changed(self, textbox, context, event):
       thickness = self.get_thickness()
@@ -125,9 +130,7 @@ class FSC_OT_Solidify_Operator(BL_UI_OT_draw_operator):
 
     def get_solidify_modifier(self):
         active_obj = bpy.context.view_layer.objects.active
-        if active_obj is not None:
-            return active_obj.modifiers.get("FSC_SOLIDIFY")
-        return None
+        return get_modifier(active_obj, "SOLIDIFY")
 
     def init_widget_values(self):
         mod_solid = self.get_solidify_modifier()
