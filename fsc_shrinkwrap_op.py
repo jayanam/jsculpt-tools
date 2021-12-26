@@ -17,7 +17,5 @@ class FSC_OT_Shrinkwrap_Operator(Operator):
         return context.view_layer.objects.active is not None
 
     def invoke(self, context, event):
-
-      mod_shrinkwrap = add_shrinkwrap(context.view_layer.objects.active, context)
-
-      return {'FINISHED'}
+        mod_shrinkwrap = add_shrinkwrap(context.view_layer.objects.active, context)
+        return {'FINISHED'}

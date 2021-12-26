@@ -1,3 +1,5 @@
+import bpy
+
 from . fsc_common_utils import get_axis_no
 
 def add_mirror(retopo_object, context):
@@ -15,10 +17,19 @@ def get_modifier(object, type):
       return mod
   return None
 
+def add_solidify(retopo_object, context):
+  mod_solid = get_modifier(retopo_object, "SOLIDIFY")
+  if not mod_solid:
+    mod_solid = retopo_object.modifiers.new(type="SOLIDIFY", name="FSC_SOLIDIFY")
+    mod_solid.use_even_offset = True
+
+  return mod_solid
+
 def add_subsurf(retopo_object, context):
   mod_subsurf = get_modifier(retopo_object, "SUBSURF")
   if not mod_subsurf:
     mod_subsurf = retopo_object.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
+    bpy.ops.object.modifier_move_to_index(modifier=mod_subsurf.name, index=0)
 
   return mod_subsurf
 

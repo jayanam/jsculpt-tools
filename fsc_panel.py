@@ -107,10 +107,13 @@ class FSC_PT_Retopo_Panel(Panel):
 
         row = layout.row()
         col = row.column()
-        col.operator('mesh.flip_normals', text="", icon="ORIENTATION_NORMAL")
+        col.operator('mesh.fsc_flipnormals', text="", icon="ORIENTATION_NORMAL")
 
         col = row.column()
         col.operator('object.fsc_subsurf', text="", icon="MOD_SUBSURF")
 
         col = row.column()
         col.operator('object.fsc_shrinkwrap', text="", icon="MOD_SHRINKWRAP")
+
+        col = row.column()
+        col.operator('object.fsc_solidify', text="", icon="MOD_SOLIDIFY")
