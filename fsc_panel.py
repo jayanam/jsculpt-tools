@@ -103,7 +103,14 @@ class FSC_PT_Retopo_Panel(Panel):
         row.prop(context.scene, "add_retopo_mirror", text="Mirror")
 
         row = layout.row()
-        row.prop(context.scene, "add_retopo_subsurf", text="Subdivision surface")
+        row.operator('object.fsc_draw_retopo', text="Draw Retopo Mesh")
 
         row = layout.row()
-        row.operator('object.fsc_draw_retopo', text="Draw Retopo Mesh")
+        col = row.column()
+        col.operator('mesh.flip_normals', text="", icon="ORIENTATION_NORMAL")
+
+        col = row.column()
+        col.operator('object.fsc_subsurf', text="", icon="MOD_SUBSURF")
+
+        col = row.column()
+        col.operator('object.fsc_shrinkwrap', text="", icon="MOD_SHRINKWRAP")

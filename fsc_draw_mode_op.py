@@ -7,7 +7,7 @@ from bpy.props import *
 from . types.vertices import *
 from . utils.fsc_view_utils import *
 from . utils.fsc_select_mode_utils import *
-from . utils.fsc_retopo_utils import add_mirror, add_shrinkwrap, set_retopo_settings
+from . utils.fsc_retopo_utils import add_mirror, set_retopo_settings
 
 # Draw mode operator
 class FSC_OT_Draw_Mode_Operator(Operator):
@@ -88,6 +88,7 @@ class FSC_OT_Draw_Mode_Operator(Operator):
                 if mouse_pos_3d and hit_object:
                     self.points.append(mouse_pos_3d)
                     context.scene.retopo_object = hit_object
+                    result = "RUNNING_MODAL"
 
         return { result }
 
@@ -128,11 +129,6 @@ class FSC_OT_Draw_Mode_Operator(Operator):
 
             set_retopo_settings(context)
 
-            add_shrinkwrap(retopo_mesh, context)
-
-            if context.scene.add_retopo_subsurf:
-                mod_subsurf = retopo_mesh.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
-
             if context.scene.add_retopo_mirror != "None":
                 context.scene.cursor.location = (0, 0, 0)
                 bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
@@ -142,8 +138,6 @@ class FSC_OT_Draw_Mode_Operator(Operator):
             # Switch to edit mode and select mesh
             to_edit()
             select_mesh()
-
-            bpy.ops.mesh.normals_make_consistent(inside=True)
 
 
 	# Draw handler to paint in pixels

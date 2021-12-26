@@ -46,9 +46,6 @@ class FSC_OT_Retopo_Operator(Operator):
       
       add_shrinkwrap(retopo_object, context)
 
-      if context.scene.add_retopo_subsurf:
-        mod_subsurf = retopo_object.modifiers.new(type="SUBSURF", name="FSC_SUBSURF")
-
       if context.scene.add_retopo_mirror != "None":
 
         # Reset location to zero for mirror and location type cursor

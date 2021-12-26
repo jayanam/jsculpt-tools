@@ -9,11 +9,21 @@ def add_mirror(retopo_object, context):
   mod_mirror.show_on_cage = True
 
 
+def get_modifier(object, type):
+  for mod in object.modifiers:
+    if mod.type == type:
+      return mod
+  return None
+
 def add_shrinkwrap(retopo_object, context):
-  mod_sw = retopo_object.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
-  mod_sw.target = context.scene.retopo_object
-  mod_sw.wrap_mode = 'ABOVE_SURFACE'
-  mod_sw.offset = 0.03
+  mod_sw = get_modifier(retopo_object, "SHRINKWRAP")
+  if not mod_sw:
+    mod_sw = retopo_object.modifiers.new(type="SHRINKWRAP", name="FSC_SHRINKWRAP")
+    mod_sw.target = context.scene.retopo_object
+    mod_sw.wrap_mode = 'ABOVE_SURFACE'
+    mod_sw.offset = 0.02
+    mod_sw.show_on_cage = True
+  return mod_sw
 
 def set_retopo_settings(context):
   my_areas = context.workspace.screens[0].areas

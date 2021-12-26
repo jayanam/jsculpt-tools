@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 2, 0, 0),
+    "version" : (1, 2, 1, 0),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -16,11 +16,12 @@ from . fsc_panel import *
 from . fsc_bool_op import *
 from . fsc_mask_op import *
 from . fsc_remesh_op import *
-from . fsc_retopo_op import *
 from . fsc_add_object_op import *
 from . fsc_select_op import *
 from . fsc_preferences import FSC_AddonPreferences
 from . fsc_draw_mode_op import *
+from . fsc_subsurf_op import *
+from . fsc_shrinkwrap_op import *
 
 # Global properties
 bpy.types.WindowManager.in_modal_mode = BoolProperty(name="Modal Mode",
@@ -89,10 +90,6 @@ bpy.types.Scene.retopo_mesh = bpy.props.EnumProperty(items=retopo_mesh,
                                                         description="Retopo mesh (plane or vertex)",
                                                         default="Plane") 
 
-bpy.types.Scene.add_retopo_subsurf  = BoolProperty(name="Subdivision surface", 
-                                      description="Add subdivision surface modifier for retopo mesh",
-                                      default = False) 
-
 add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Plane",     "Plane",    "", 1),
                      ("Cube",      "Cube",     "", 2),
@@ -121,8 +118,8 @@ addon_keymaps = []
 classes = ( FSC_PT_Panel, FSC_PT_Add_Objects_Panel, FSC_PT_Extract_Mask_Panel, 
             FSC_PT_Remesh_Panel, FSC_PT_Retopo_Panel, FSC_OT_BoolOperator_Union, 
             FSC_OT_BoolOperator_Difference, FSC_OT_Mask_Extract_Operator, FSC_OT_Mask_Invert_Transform_Operator,
-            FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Retopo_Operator, FSC_OT_Select_Operator,
-            FSC_AddonPreferences, FSC_OT_Draw_Mode_Operator)
+            FSC_OT_Remesh_Operator, FSC_OT_Add_Oject_Operator, FSC_OT_Select_Operator,
+            FSC_AddonPreferences, FSC_OT_Draw_Mode_Operator, FSC_OT_Subsurf_Operator, FSC_OT_Shrinkwrap_Operator)
 
 def register():
     for c in classes:
