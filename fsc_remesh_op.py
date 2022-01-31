@@ -25,5 +25,8 @@ class FSC_OT_Remesh_Operator(Operator):
         if self.join_b4_remesh:
             bpy.ops.object.join()
 
-        execute_remesh(context) 
+        for sel_object in context.selected_objects:
+            make_active(sel_object)
+            execute_remesh(context) 
+            
         return {'FINISHED'}
