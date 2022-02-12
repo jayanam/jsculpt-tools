@@ -116,7 +116,7 @@ class FSC_OT_Draw_Mode_Operator(Operator):
                 bm.verts.new(v)
 
             if close_mesh:
-                bm.faces.new(bm.verts)
+                bmesh.ops.contextual_create(bm, geom=list(bm.verts))
             else:
                 bm.verts.ensure_lookup_table()
                 for i in range(len(bm.verts)-1):
@@ -126,6 +126,8 @@ class FSC_OT_Draw_Mode_Operator(Operator):
             bm.free()
 
             to_object()
+
+            context.scene.retopo_mesh = retopo_mesh
 
             set_retopo_settings(context)
 

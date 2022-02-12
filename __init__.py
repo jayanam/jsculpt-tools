@@ -3,7 +3,7 @@ bl_info = {
     "author" : "jayanam",
     "description" : "Sculpting tools for Blender 2.8 - 3.x",
     "blender" : (2, 80, 0),
-    "version" : (1, 2, 5, 1),
+    "version" : (1, 2, 5, 2),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"
@@ -34,18 +34,12 @@ add_object_mirror = [("None",    "None",  "", 0),
                      ("Z",       "Z",     "", 3)    
                   ]
 
-retopo_location = [("Origin", "Origin",  "", 0),
-                   ("Cursor", "Cursor",     "", 1)
-                  ]
-
-retopo_mesh = [("Plane", "Plane",   "", 0),
-               ("Vertex", "Vertex", "", 1)
-              ]
-
 # Scene properties
 bpy.types.Scene.target_object = PointerProperty(type=bpy.types.Object)
 
 bpy.types.Scene.retopo_object = PointerProperty(type=bpy.types.Object)
+
+bpy.types.Scene.retopo_mesh = PointerProperty(type=bpy.types.Object)
 
 bpy.types.Scene.extract_thickness = bpy.props.FloatProperty( name="Extract thickness", 
                                       description="Thickness of the extracted mesh",
@@ -80,16 +74,6 @@ bpy.types.Scene.remesh_after_extract  = BoolProperty(name="Remesh after extract"
 bpy.types.Scene.add_retopo_mirror = bpy.props.EnumProperty(items=add_object_mirror, 
                                                         name="Retopo Mirror",
                                                         default="None") 
-
-bpy.types.Scene.retopo_location = bpy.props.EnumProperty(items=retopo_location, 
-                                                        name="Retopo Location",
-                                                        description="Initial location for retopo plane",
-                                                        default="Origin") 
-
-bpy.types.Scene.retopo_mesh = bpy.props.EnumProperty(items=retopo_mesh, 
-                                                        name="Retopo Mesh",
-                                                        description="Retopo mesh (plane or vertex)",
-                                                        default="Plane") 
 
 add_object_types = [ ("Sphere",    "Sphere",   "", 0),
                      ("Plane",     "Plane",    "", 1),
