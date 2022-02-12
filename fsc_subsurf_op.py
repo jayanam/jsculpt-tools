@@ -8,7 +8,7 @@ from . utils.fsc_select_mode_utils import *
 
 class FSC_OT_Subsurf_Operator(Operator):
     bl_idname = "object.fsc_subsurf"
-    bl_label = "Add Subsurf Modifier"
+    bl_label = ""
     bl_description = "Add Subsurf Modifier if not exists" 
     bl_options = {'REGISTER', 'UNDO'} 
 
@@ -24,7 +24,7 @@ class FSC_OT_Subsurf_Operator(Operator):
 
 class FSC_OT_FlipNormals_Operator(Operator):
     bl_idname = "mesh.fsc_flipnormals"
-    bl_label = "Flip normals"
+    bl_label = ""
     bl_description = "Select all and flip normals" 
     bl_options = {'REGISTER', 'UNDO'} 
 

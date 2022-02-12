@@ -120,3 +120,6 @@ class FSC_PT_Retopo_Panel(Panel):
 
         col = row.column()
         col.operator('object.fsc_solidify', text="", icon="MOD_SOLIDIFY")
+
+        col = row.column()
+        col.operator('object.fsc_apply_all_mod_op', text="", icon="NLA_PUSHDOWN")      

@@ -1,5 +1,11 @@
 import bpy
 
+def get_mode():
+    return bpy.context.object.mode
+
+def to_mode(new_mode):
+    bpy.ops.object.mode_set(mode=new_mode, toggle=False)
+
 def to_object():
     bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 

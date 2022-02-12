@@ -16,7 +16,7 @@ from .widgets . bl_ui_draw_op import *
 
 class FSC_OT_Solidify_Operator(BL_UI_OT_draw_operator):
     bl_idname = "object.fsc_solidify"
-    bl_label = "Solidify an object"
+    bl_label = ""
     bl_description = "Solidify an object" 
     bl_options = {'REGISTER', 'UNDO'}
               

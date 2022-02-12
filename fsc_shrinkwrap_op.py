@@ -17,7 +17,7 @@ from .widgets . bl_ui_draw_op import *
 
 class FSC_OT_Shrinkwrap_Operator(BL_UI_OT_draw_operator):
     bl_idname = "object.fsc_shrinkwrap"
-    bl_label = "Add Shrinkwrap Modifier"
+    bl_label = ""
     bl_description = "Add Shrinkwrap Modifier if not exists" 
     bl_options = {'REGISTER', 'UNDO'} 
 
