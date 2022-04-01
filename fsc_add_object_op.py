@@ -100,6 +100,8 @@ class FSC_OT_Add_Oject_Operator(Operator):
     def add_object(self, context, mouse_pos):
         
         scene = context.scene
+        mode = get_mode()
+
         to_object()
         
         region = context.region
@@ -180,4 +182,4 @@ class FSC_OT_Add_Oject_Operator(Operator):
             # Set the pivot point back to the old position of the object
             bpy.context.scene.cursor.location = old_loc
 
-        to_sculpt()
+        to_mode(mode)
