@@ -4,6 +4,8 @@ import bpy
 from bpy.types import Operator
 from bpy.props import *
 
+from . utils.fsc_bool_util import *
+
 from . types.vertices import *
 from . utils.fsc_view_utils import *
 from . utils.fsc_select_mode_utils import *
@@ -88,6 +90,7 @@ class FSC_OT_Draw_Mode_Operator(Operator):
                 if mouse_pos_3d and hit_object:
                     self.points.append(mouse_pos_3d)
                     context.scene.retopo_object = hit_object
+                    make_active(hit_object)
                     result = "RUNNING_MODAL"
 
         return { result }
@@ -104,10 +107,6 @@ class FSC_OT_Draw_Mode_Operator(Operator):
             mesh = bpy.data.meshes.new("Retopo mesh data")
             retopo_mesh  = bpy.data.objects.new("retopo mesh", mesh)
             bpy.context.scene.collection.objects.link(retopo_mesh)
-            bpy.ops.object.select_all(action='DESELECT')
-
-            bpy.context.view_layer.objects.active = retopo_mesh
-            retopo_mesh.select_set(state=True)
 
             bm = bmesh.new()
             bm.from_mesh(mesh) 
@@ -126,6 +125,8 @@ class FSC_OT_Draw_Mode_Operator(Operator):
             bm.free()
 
             to_object()
+
+            select_active(retopo_mesh)
 
             context.scene.retopo_mesh = retopo_mesh
 
