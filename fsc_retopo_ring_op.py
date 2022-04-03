@@ -107,8 +107,15 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
       bm.to_mesh(mesh)
       bm.free()
 
+      bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+
+      context.scene.tool_settings.use_snap_project = False
+      context.scene.tool_settings.use_snap = False
+
       to_edit()
       
+      select_mesh()
+
       bpy.ops.mesh.delete(type='ONLY_FACE')
 
       select_mesh()
