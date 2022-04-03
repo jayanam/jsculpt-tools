@@ -106,7 +106,10 @@ class FSC_PT_Retopo_Panel(Panel):
         row.prop(context.scene, "add_retopo_mirror", text="Mirror")
 
         row = layout.row()
-        row.operator('object.fsc_draw_retopo', text="Draw Retopo Mesh")
+        row.operator('object.fsc_draw_retopo', text="Draw Mesh")
+
+        row = layout.row()
+        row.operator('object.fsc_retopo_ring', text="Draw Ring")
 
         row = layout.row()
         col = row.column()

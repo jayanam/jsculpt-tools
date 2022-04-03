@@ -1,7 +1,7 @@
 import blf
 import bmesh
 import bpy
-from bpy.types import Operator
+
 from bpy.props import *
 
 from . utils.fsc_bool_util import *
@@ -11,55 +11,14 @@ from . utils.fsc_view_utils import *
 from . utils.fsc_select_mode_utils import *
 from . utils.fsc_retopo_utils import add_mirror, set_retopo_settings
 
+from . fsc_draw_base_op import *
+
 # Draw mode operator
-class FSC_OT_Draw_Mode_Operator(Operator):
+class FSC_OT_Draw_Mode_Operator(FSC_OT_Draw_Base_Operator):
     bl_idname = "object.fsc_draw_retopo"
     bl_label = "Draw Mode Operator"
     bl_description = "Draw Mode Operator"
     bl_options = {"REGISTER", "UNDO", "BLOCKING"}
-
-    @classmethod
-    def poll(cls, context): 
-
-        # Check if we are already in draw mode
-        if context.window_manager.in_draw_mode:
-            return False
-
-        return True
-		
-    def __init__(self):
-        self.draw_handle_2d = None
-        self.draw_handle_3d = None
-        self.points = VertexContainer()
-
-    def invoke(self, context, event):
-        args = (self, context)  
-
-        context.window_manager.in_draw_mode = True   
-
-        # Register drawing handlers for 2d and 3d
-        self.register_handlers(args, context)
-                   
-        # Register as modal operator
-        context.window_manager.modal_handler_add(self)
-
-        return {"RUNNING_MODAL"}
-    
-    def register_handlers(self, args, context):
-        self.draw_handle_3d = bpy.types.SpaceView3D.draw_handler_add(
-            self.draw_callback_3d, args, "WINDOW", "POST_VIEW")
-
-        self.draw_handle_2d = bpy.types.SpaceView3D.draw_handler_add(
-            self.draw_callback_2d, args, "WINDOW", "POST_PIXEL")
-        
-    def unregister_handlers(self, context):
-
-        bpy.types.SpaceView3D.draw_handler_remove(self.draw_handle_2d, "WINDOW")
-        bpy.types.SpaceView3D.draw_handler_remove(self.draw_handle_3d, "WINDOW")
-        
-        self.draw_handle_2d = None
-        self.draw_handle_3d = None
-        context.window_manager.in_draw_mode = False
 
     def modal(self, context, event):
         if context.area:
@@ -94,10 +53,6 @@ class FSC_OT_Draw_Mode_Operator(Operator):
                     result = "RUNNING_MODAL"
 
         return { result }
-
-    def finish(self):
-        self.unregister_handlers(bpy.context)
-        return {"FINISHED"}
 
     def to_mesh(self, context, close_mesh):
         vertices = self.points.get_vertices().copy()
@@ -162,9 +117,5 @@ class FSC_OT_Draw_Mode_Operator(Operator):
         blf.position(0, xt - blf.dimensions(0, title)[0] / 2, 45, 0)
         blf.draw(0, title)
 
-        blf.position(1, xt - blf.dimensions(0, desc)[0] / 2, 20, 0)
+        blf.position(1, xt - blf.dimensions(1, desc)[0] / 2, 20, 0)
         blf.draw(1, desc)
-
-	# Draw handler to paint in 3d view
-    def draw_callback_3d(self, op, context):        
-        self.points.draw()
