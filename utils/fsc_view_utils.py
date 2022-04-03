@@ -67,7 +67,7 @@ def scene_raycast(direction, origin, context):
     # Try to hit an object in the scene
     ray_cast_param = __get_raycast_param(context.view_layer)
     hit, hit_vertex, normal, hit_face, hit_obj, *_ = scene.ray_cast(ray_cast_param, origin, direction)
-    return hit, hit_vertex
+    return hit, hit_vertex, hit_obj
 
 def get_center_vectors(v1 : mathutils.Vector, v2 : mathutils.Vector):
     return (v2 + v1) / 2

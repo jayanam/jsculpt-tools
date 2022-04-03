@@ -130,9 +130,9 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
         origin, direction = get_origin_and_direction( self.points.get_center_2d(), context)
 
-        _, line_center_hit1 = scene_raycast(direction, origin, context)
+        _, line_center_hit1, _ = scene_raycast(direction, origin, context)
 
-        _, line_center_hit2 = scene_raycast(direction, line_center_hit1 + (direction * 0.01), context)
+        _, line_center_hit2, _ = scene_raycast(direction, line_center_hit1 + (direction * 0.01), context)
 
         return get_center_vectors(line_center_hit1, line_center_hit2), direction
 
@@ -152,11 +152,15 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
             circle_points.append(center_object + r * math.cos(t) * v1_n + r * math.sin(t) * direction)
             t += 2 * math.pi / context.scene.loop_cuts
 
+        hit_obj = None
         # raycast all points of the circle in direction to center_object and collect hit_points
         for cp in circle_points:
-            hit, hit_vertex = scene_raycast(-(cp - center_object).normalized(), cp, context)
+            hit, hit_vertex, hit_obj = scene_raycast(-(cp - center_object).normalized(), cp, context)
             if hit:
                 self.points_ring.append(hit_vertex)
+
+        if hit_obj:
+          context.scene.retopo_object = hit_obj
 
 	  # Draw handler to paint in pixels
     def draw_callback_2d(self, op, context):
