@@ -77,24 +77,26 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
     def to_mesh(self, context):
       
-      mesh = bpy.data.meshes.new("Retopo_Ring_Mesh")
-      obj  = bpy.data.objects.new("Retopo_Ring_Object", mesh)
+      retopo_mesh = bpy.data.meshes.new("Retopo_Ring_Mesh")
+      retopo_obj  = bpy.data.objects.new("Retopo_Ring_Object", retopo_mesh)
 
-      bpy.context.scene.collection.objects.link(obj)
+      bpy.context.scene.collection.objects.link(retopo_obj)
 
-      make_active(obj)
+      make_active(retopo_obj)
 
       to_object()
+      
+      context.scene.retopo_mesh = retopo_obj
 
       bpy.ops.object.select_all(action='DESELECT')
 
-      bpy.context.view_layer.objects.active = obj
-      obj.select_set(state=True)
+      bpy.context.view_layer.objects.active = retopo_obj
+      retopo_obj.select_set(state=True)
 
       # Create a bmesh and add the vertices
       # added by mouse clicks
       bm = bmesh.new()
-      bm.from_mesh(mesh) 
+      bm.from_mesh(retopo_mesh) 
 
       for v in self.points_ring.get_vertices().copy():
           bm.verts.new(v)
@@ -104,7 +106,7 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
       bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
 
-      bm.to_mesh(mesh)
+      bm.to_mesh(retopo_mesh)
       bm.free()
 
       bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
