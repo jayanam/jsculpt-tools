@@ -67,7 +67,12 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
                 elif self.points.is_initialized() :
                     self.project_loop_onto_object(context)
-                    self.to_mesh(context)
+
+                    if self.has_retopo_mesh(context):
+                        self.extend_retopo_mesh(context)
+                    else:
+                        self.create_retopo_mesh(context)
+
                     self.points.reset()
                     self.points_ring.reset()
 
@@ -75,52 +80,84 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
         return { result }
 
-    def to_mesh(self, context):
+    def has_retopo_mesh(self, context):
+        return context.scene.retopo_mesh and context.scene.retopo_mesh.data
+
+    def extend_retopo_mesh(self, context):
+
+        retopo_obj = context.scene.retopo_mesh
+        retopo_mesh = retopo_obj.data
+
+        bm = bmesh.from_edit_mesh(retopo_mesh) 
+
+        selected_edges = [e for e in bm.edges if e.select]
+        
+        new_verts = []
+        new_edges = []
+        for v in self.points_ring.get_vertices().copy():
+            new_verts.append(bm.verts.new(v - retopo_obj.location))
+
+        bm.verts.ensure_lookup_table()
+        for i in range(len(new_verts)-1):
+            new_edges.append(bm.edges.new((new_verts[i], new_verts[i+1])))
+        new_edges.append(bm.edges.new((new_verts[-1], new_verts[0])))
+
+        bmesh.ops.bridge_loops(bm, edges=selected_edges + new_edges)
+
+        bmesh.update_edit_mesh(retopo_mesh)
+
+        deselect_mesh()
+
+        for edge in new_edges:
+            edge.select_set(True)
+
+
+    def create_retopo_mesh(self, context):
       
-      retopo_mesh = bpy.data.meshes.new("Retopo_Ring_Mesh")
-      retopo_obj  = bpy.data.objects.new("Retopo_Ring_Object", retopo_mesh)
+        retopo_mesh = bpy.data.meshes.new("Retopo_Ring_Mesh")
+        retopo_obj  = bpy.data.objects.new("Retopo_Ring_Object", retopo_mesh)
 
-      bpy.context.scene.collection.objects.link(retopo_obj)
+        bpy.context.scene.collection.objects.link(retopo_obj)
 
-      make_active(retopo_obj)
+        make_active(retopo_obj)
 
-      to_object()
-      
-      context.scene.retopo_mesh = retopo_obj
+        to_object()
 
-      bpy.ops.object.select_all(action='DESELECT')
+        context.scene.retopo_mesh = retopo_obj
 
-      bpy.context.view_layer.objects.active = retopo_obj
-      retopo_obj.select_set(state=True)
+        bpy.ops.object.select_all(action='DESELECT')
 
-      # Create a bmesh and add the vertices
-      # added by mouse clicks
-      bm = bmesh.new()
-      bm.from_mesh(retopo_mesh) 
+        bpy.context.view_layer.objects.active = retopo_obj
+        retopo_obj.select_set(state=True)
 
-      for v in self.points_ring.get_vertices().copy():
-          bm.verts.new(v)
+        # Create a bmesh and add the vertices
+        # added by mouse clicks
+        bm = bmesh.new()
+        bm.from_mesh(retopo_mesh) 
 
-      bm.verts.index_update()
-      bm.faces.new(bm.verts)
+        for v in self.points_ring.get_vertices().copy():
+            bm.verts.new(v)
 
-      bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.verts.index_update()
+        bm.faces.new(bm.verts)
 
-      bm.to_mesh(retopo_mesh)
-      bm.free()
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
 
-      bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        bm.to_mesh(retopo_mesh)
+        bm.free()
 
-      context.scene.tool_settings.use_snap_project = False
-      context.scene.tool_settings.use_snap = False
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
 
-      to_edit()
-      
-      select_mesh()
+        context.scene.tool_settings.use_snap_project = False
+        context.scene.tool_settings.use_snap = False
 
-      bpy.ops.mesh.delete(type='ONLY_FACE')
+        to_edit()
 
-      select_mesh()
+        select_mesh()
+
+        bpy.ops.mesh.delete(type='ONLY_FACE')
+
+        select_mesh()
 
 
     def get_center_object(self, context):
