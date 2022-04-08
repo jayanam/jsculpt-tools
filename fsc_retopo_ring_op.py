@@ -81,7 +81,11 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
         return { result }
 
     def has_retopo_mesh(self, context):
-        return context.scene.retopo_mesh and context.scene.retopo_mesh.data
+        if context.scene.retopo_mesh:
+            if len(context.scene.retopo_mesh.users_scene) == 0:
+                context.scene.retopo_mesh = None    
+            
+        return context.scene.retopo_mesh != None
 
     def extend_retopo_mesh(self, context):
 
