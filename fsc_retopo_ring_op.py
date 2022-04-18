@@ -87,15 +87,7 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
             
         return context.scene.retopo_mesh != None
 
-    def extend_retopo_mesh(self, context):
-
-        retopo_obj = context.scene.retopo_mesh
-        retopo_mesh = retopo_obj.data
-
-        bm = bmesh.from_edit_mesh(retopo_mesh) 
-
-        selected_edges = [e for e in bm.edges if e.select]
-        
+    def create_ring(self, retopo_obj, bm):
         new_verts = []
         new_edges = []
         for v in self.points_ring.get_vertices().copy():
@@ -106,14 +98,51 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
             new_edges.append(bm.edges.new((new_verts[i], new_verts[i+1])))
         new_edges.append(bm.edges.new((new_verts[-1], new_verts[0])))
 
-        bmesh.ops.bridge_loops(bm, edges=selected_edges + new_edges)
+        return new_verts, new_edges
 
-        bmesh.update_edit_mesh(retopo_mesh)
+    def extend_retopo_mesh(self, context):
+
+        retopo_obj = context.scene.retopo_mesh
+        retopo_mesh = retopo_obj.data
+
+        bm = bmesh.from_edit_mesh(retopo_mesh) 
+
+        selected_edges = [e for e in bm.edges if e.select]
+        
+        new_verts, new_edges = self.create_ring(retopo_obj, bm)
+
+        bm.verts.sort()
+
+        bm.verts.ensure_lookup_table()
+        bm.edges.ensure_lookup_table()
+        bm.faces.ensure_lookup_table()
 
         deselect_mesh()
 
         for edge in new_edges:
             edge.select_set(True)
+
+        connections = [v.index for v in new_verts]
+        connections.append(connections[0])
+
+        tknots, tpoints = self.get_space_points(bm, connections[:])
+
+        splines = self.get_splines(bm, tknots, connections[:])
+
+        move = []
+        move.append(self.get_verts_to_move(tknots, tpoints, connections[:-1], splines))
+
+        self.move_verts(retopo_obj, bm, move)
+
+        bmesh.ops.bridge_loops(bm, edges=selected_edges + new_edges)
+
+        bmesh.update_edit_mesh(retopo_mesh)
+
+        to_object()
+        
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')      
+
+        to_edit()
 
 
     def create_retopo_mesh(self, context):
@@ -139,29 +168,101 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
         bm = bmesh.new()
         bm.from_mesh(retopo_mesh) 
 
-        for v in self.points_ring.get_vertices().copy():
-            bm.verts.new(v)
+        new_verts, new_edges = self.create_ring(retopo_obj, bm)
 
-        bm.verts.index_update()
-        bm.faces.new(bm.verts)
+        bm.to_mesh(retopo_mesh)
 
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        connections = [v.index for v in new_verts]
+        connections.append(connections[0])
+
+        tconnections, tpoints = self.get_space_points(bm, connections[:])
+
+        splines = self.get_splines(bm, tconnections, connections[:])
+
+        move = []
+        move.append(self.get_verts_to_move(tconnections, tpoints, connections[:-1], splines))
+
+        self.move_verts(retopo_obj, bm, move)
 
         bm.to_mesh(retopo_mesh)
         bm.free()
 
-        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')        
+
+        to_edit()
+
+        bmesh.update_edit_mesh(retopo_obj.data, loop_triangles=True, destructive=True)
 
         context.scene.tool_settings.use_snap_project = False
         context.scene.tool_settings.use_snap = False
 
-        to_edit()
-
         select_mesh()
 
-        bpy.ops.mesh.delete(type='ONLY_FACE')
 
-        select_mesh()
+    # Move vertices to new location
+    # Algorithm by Loop tools addon
+    def move_verts(self, object, bm, move):
+
+        for loop in move:
+            for index, loc in loop:
+                bm.verts[index].co = loc
+
+        bm.normal_update()
+        object.data.update()
+
+        bm.verts.ensure_lookup_table()
+        bm.edges.ensure_lookup_table()
+        bm.faces.ensure_lookup_table()
+
+    def get_verts_to_move(self, tconnections, tpoints, points, splines):
+        move = []
+        for p in points:
+            m = tpoints[points.index(p)]
+            if m in tconnections:
+                n = tconnections.index(m)
+            else:
+                t = tconnections[:]
+                t.append(m)
+                t.sort()
+                n = t.index(m) - 1
+            if n > len(splines) - 1:
+                n = len(splines) - 1
+            elif n < 0:
+                n = 0
+
+            a, d, t, u = splines[n]
+            move.append([p, ((m - t) / u) * d + a])
+
+        return (move)
+
+    def get_splines(self, bm_mod, tconnections, connections):
+        splines = []
+        for i in range(len(connections) - 1):
+            a = bm_mod.verts[connections[i]].co
+            b = bm_mod.verts[connections[i + 1]].co
+            d = b - a
+            t = tconnections[i]
+            u = tconnections[i + 1] - t
+            splines.append([a, d, t, u])
+
+        return (splines)
+
+    def get_space_points(self, bm_mod, connections):
+        tconnections = []
+        loc_prev = False
+        len_total = 0
+        for index in connections:
+            loc = mathutils.Vector(bm_mod.verts[index].co[:])
+            if not loc_prev:
+                loc_prev = loc
+            len_total += (loc - loc_prev).length
+            tconnections.append(len_total)
+            loc_prev = loc
+        amount = len(connections)
+        t_per_segment = len_total / (amount - 1)
+        tpoints = [i * t_per_segment for i in range(amount)]
+
+        return (tconnections, tpoints)
 
 
     def get_center_object(self, context):
@@ -193,7 +294,7 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
         while t < 2 * math.pi:
             circle_points.append(center_object + r * math.cos(t) * v1_n + r * math.sin(t) * direction)
-            t += 2 * math.pi / context.scene.loop_cuts
+            t += 2 * math.pi / 16
 
         hit_obj = None
         # raycast all points of the circle in direction to center_object and collect hit_points
