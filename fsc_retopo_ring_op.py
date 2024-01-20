@@ -12,6 +12,7 @@ from . types.line_container import LineContainer
 from . types.vertices import *
 from . utils.fsc_view_utils import *
 from . utils.fsc_select_mode_utils import *
+from . utils.textutils import *
 
 from . fsc_draw_base_op import *
 
@@ -193,7 +194,11 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
 
         bmesh.update_edit_mesh(retopo_obj.data, loop_triangles=True, destructive=True)
 
-        context.scene.tool_settings.use_snap_project = False
+        if bpy.app.version >= (4, 0, 0):
+            context.scene.tool_settings.use_snap_time_absolute = False
+        else:
+            context.scene.tool_settings.use_snap_project = False
+            
         context.scene.tool_settings.use_snap = False
 
         select_mesh()
@@ -313,10 +318,10 @@ class FSC_OT_Retopo_Ring_Operator(FSC_OT_Draw_Base_Operator):
         xt = int(region.width / 2.0)
 
         # Draw text for draw mode
-        blf.size(0, 22, 72)
+        blf_set_size(0, 22)
         blf.color(0, 1, 1, 1, 1)
 
-        blf.size(1, 16, 72)
+        blf_set_size(1, 16)
         blf.color(1, 1, 1, 1, 1)
 
         title = "- Retopo Ring Mesh -"

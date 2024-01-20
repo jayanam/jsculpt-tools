@@ -11,6 +11,8 @@ from . utils.fsc_select_mode_utils import *
 
 from . utils.fsc_common_utils import get_axis_no
 
+from . utils.textutils import *
+
 class FSC_OT_Add_Oject_Operator(Operator):
     bl_idname = "object.fsc_add_object"
     bl_label = "Add object"
@@ -47,8 +49,8 @@ class FSC_OT_Add_Oject_Operator(Operator):
         text = "Ctrl + Left Click = Add | Esc = Exit"
 
         blf.color(1, 1, 1, 1, 1)
-        blf.size(0, 20, 72)
-        blf.size(1, 16, 72)
+        blf_set_size(0, 20)
+        blf_set_size(1, 16)
 
         region = context.region
         xt = int(region.width / 2.0)

@@ -6,6 +6,8 @@ from bpy.props import *
 
 from . types.vertices import *
 
+from . utils.textutils import *
+
 # Draw base operator
 class FSC_OT_Draw_Base_Operator(Operator):
 
@@ -64,10 +66,10 @@ class FSC_OT_Draw_Base_Operator(Operator):
         xt = int(region.width / 2.0)
 
         # Draw text for draw mode
-        blf.size(0, 22, 72)
+        blf_set_size(0,22)
         blf.color(0, 1, 1, 1, 1)
 
-        blf.size(1, 16, 72)
+        blf_set_size(1, 16)
         blf.color(1, 1, 1, 1, 1)
 
         title = "- Ring Creation Mode -"

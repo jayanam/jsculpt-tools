@@ -52,5 +52,9 @@ def set_retopo_settings(context):
               space.shading.show_backface_culling = True
 
   context.scene.tool_settings.snap_elements = {'FACE'}
-  context.scene.tool_settings.use_snap_project = True
+  if bpy.app.version >= (4, 0, 0):
+      context.scene.tool_settings.use_snap_time_absolute = True
+  else:
+      context.scene.tool_settings.use_snap_project = True
+      
   context.scene.tool_settings.use_snap = True
