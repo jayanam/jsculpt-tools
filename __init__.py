@@ -1,9 +1,9 @@
 bl_info = {
     "name" : "JSculpt Tools",
     "author" : "jayanam",
-    "description" : "Sculpting tools for Blender 2.8 - 3.x",
+    "description" : "Sculpting tools for Blender 2.8 - 4.x",
     "blender" : (2, 80, 0),
-    "version" : (4, 0, 0, 1),
+    "version" : (4, 2, 0, 1),
     "location" : "View3D",
     "warning" : "",
     "category" : "Object"

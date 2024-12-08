@@ -33,11 +33,16 @@ class FSC_OT_Mask_Extract_Operator(Operator):
 
         # Invert the mask and hide the masked area
         bpy.ops.paint.mask_flood_fill(mode='INVERT')
-        bpy.ops.paint.hide_show(action='HIDE', area='MASKED')
+
+        if bpy.app.version < (4, 2, 0):
+            bpy.ops.paint.hide_show(action='HIDE', area='MASKED')
+        else:
+            bpy.ops.paint.hide_show_masked(action='HIDE')
 
         # select the unmasked part in edit mode and duplicate it
         to_edit()
         select_mesh()
+        
         bpy.ops.mesh.duplicate_move()
 
         # separate a new object from the selection
@@ -49,7 +54,12 @@ class FSC_OT_Mask_Extract_Operator(Operator):
 
         # unhide the target and get rid of the mask
         to_sculpt()
-        bpy.ops.paint.hide_show(action='SHOW', area='ALL')
+
+        if bpy.app.version < (4, 2, 0):
+            bpy.ops.paint.hide_show(action='SHOW', area='ALL')
+        else:
+            bpy.ops.paint.hide_show_all(action='SHOW')
+
         bpy.ops.paint.mask_flood_fill(mode='VALUE', value=0.0)
 
         # make the new object the active one and extrude it with solidify
